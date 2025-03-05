@@ -44,20 +44,27 @@ const TeamsList: React.FC = () => {
     fetchTeams();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="text-center mt-4">Loading...</p>;
+  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
   return (
-    <div>
-      <h1>NBA Teams</h1>
-      <ul>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">NBA Teams</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {teams.map((team) => (
-          <li key={team.id}>
-            {team.full_name} ({team.abbreviation}) - {team.city},{" "}
-            {team.conference} Conference, {team.division} Division
-          </li>
+          <div
+            key={team.id}
+            className="bg-white shadow-md rounded-lg p-4 text-center"
+          >
+            <h2 className="text-xl font-semibold">{team.full_name}</h2>
+            <p className="text-gray-600">
+              {team.city} - {team.abbreviation}
+            </p>
+            <p className="text-gray-600">{team.conference} Conference</p>
+            <p className="text-gray-600">{team.division} Division</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
