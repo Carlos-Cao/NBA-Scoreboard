@@ -1,39 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Team, NBAPlayer } from "../types/types";
 import { BalldontlieAPI } from "@balldontlie/sdk";
-
-interface Team {
-  id: number;
-  full_name: string;
-  abbreviation: string;
-  city: string;
-  conference: string;
-  division: string;
-}
-
-interface Player {
-  id: number;
-  full_name: string;
-  position: string;
-  height: string;
-  weight: string;
-  jersey_number: string;
-  college: string;
-  country: string;
-}
-
-interface NBAPlayer {
-  id: number;
-  first_name: string;
-  last_name: string;
-  position: string;
-  height: string;
-  weight: string;
-  jersey_number: string;
-  college: string;
-  country: string;
-}
 
 interface PageProps {
   team: Team;
@@ -41,7 +10,7 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ team, onBack }) => {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<NBAPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,20 +27,7 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
           per_page: 100,
         });
 
-        const playersData: Player[] = response.data.map(
-          (player: NBAPlayer) => ({
-            id: player.id,
-            full_name: `${player.first_name} ${player.last_name}`,
-            position: player.position,
-            height: player.height,
-            weight: player.weight,
-            jersey_number: player.jersey_number,
-            college: player.college,
-            country: player.country,
-          })
-        );
-
-        setPlayers(playersData);
+        setPlayers(response.data);
         setLoading(false);
       } catch {
         setError("Failed to fetch players.");
@@ -104,12 +60,14 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
             key={player.id}
             className="bg-white shadow-md rounded-lg p-4 text-center"
           >
-            <h3 className="text-lg font-semibold">{player.full_name}</h3>
+            <h3 className="text-lg font-semibold">
+              {`${player.first_name} ${player.last_name}`}
+            </h3>
             <p className="text-gray-600">Position: {player.position}</p>
-            <p className="text-gray-600">Height: {player.height}</p>
-            <p className="text-gray-600">Weight: {player.weight}</p>
+            <p className="text-gray-600">Height: {player.height} ft</p>
+            <p className="text-gray-600">Weight: {player.weight} lbs</p>
             <p className="text-gray-600">
-              Jersey Number: {player.jersey_number}
+              Jersey Number: #{player.jersey_number}
             </p>
             <p className="text-gray-600">College: {player.college}</p>
             <p className="text-gray-600">Country: {player.country}</p>

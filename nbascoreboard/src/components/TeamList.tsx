@@ -2,16 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { BalldontlieAPI } from "@balldontlie/sdk";
+import { Team } from "../types/types";
 import Page from "./TeamPlayers";
-
-interface Team {
-  id: number;
-  full_name: string;
-  abbreviation: string;
-  city: string;
-  conference: string;
-  division: string;
-}
 
 const TeamsList: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -62,10 +54,11 @@ const TeamsList: React.FC = () => {
           <h1 className="text-2xl font-bold mb-4 text-center">NBA Teams</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {teams.map((team) => (
-              <div
+              <button
                 key={team.id}
                 className="bg-white shadow-md rounded-lg p-4 text-center cursor-pointer"
                 onClick={() => handleTeamClick(team)}
+                tabIndex={0}
               >
                 <h2 className="text-xl font-semibold">{team.full_name}</h2>
                 <p className="text-gray-600">
@@ -73,7 +66,7 @@ const TeamsList: React.FC = () => {
                 </p>
                 <p className="text-gray-600">{team.conference} Conference</p>
                 <p className="text-gray-600">{team.division} Division</p>
-              </div>
+              </button>
             ))}
           </div>
         </>
