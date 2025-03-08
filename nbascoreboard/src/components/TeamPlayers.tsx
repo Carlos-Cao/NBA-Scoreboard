@@ -13,9 +13,10 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
   const [players, setPlayers] = useState<NBAPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cursor, setCursor] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    const fetchPlayers = async () => {
+    const fetchPlayers = async (cursor?: number) => {
       try {
         const apiKey = process.env.NEXT_PUBLIC_BALLDONTLIE_API_KEY;
         if (!apiKey) {
@@ -25,9 +26,13 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
         const response = await api.nba.getPlayers({
           team_ids: [team.id],
           per_page: 100,
+          cursor: cursor,
         });
 
-        setPlayers(response.data);
+        setPlayers((prevPlayers) => [...prevPlayers, ...response.data]);
+        if (response.meta) {
+          setCursor(response.meta.next_cursor);
+        }
         setLoading(false);
       } catch {
         setError("Failed to fetch players.");
@@ -35,8 +40,12 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
       }
     };
 
-    fetchPlayers();
-  }, [team.id]);
+    fetchPlayers(cursor);
+  }, [team.id, cursor]);
+
+  const loadMorePlayers = () => {
+    setCursor((prevCursor) => (prevCursor ? prevCursor + 1 : 1));
+  };
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
   if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
@@ -55,9 +64,9 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
         All players who played for the {team.full_name}
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {players.map((player) => (
+        {players.map((player, index) => (
           <div
-            key={player.id}
+            key={`${player.id}-${index}`}
             className="bg-white shadow-md rounded-lg p-4 text-center"
           >
             <h3 className="text-lg font-semibold">
@@ -74,6 +83,9 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
           </div>
         ))}
       </div>
+      {!loading && !error && (
+        <button onClick={loadMorePlayers}>Load More Players</button>
+      )}
     </div>
   );
 };
