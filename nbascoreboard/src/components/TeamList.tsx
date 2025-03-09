@@ -42,7 +42,7 @@ const TeamsList: React.FC = () => {
     setSelectedTeam(team);
   };
 
-  if (loading) return <p className="text-center mt-4">Loading...</p>;
+  if (loading) return <p className="text-center mt-4">Loading Teams...</p>;
   if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
   return (

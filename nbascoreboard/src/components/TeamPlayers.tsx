@@ -47,7 +47,7 @@ const Page: React.FC<PageProps> = ({ team, onBack }) => {
     setCursor((prevCursor) => (prevCursor ? prevCursor + 1 : 1));
   };
 
-  if (loading) return <p className="text-center mt-4">Loading...</p>;
+  if (loading) return <p className="text-center mt-4">Loading Players...</p>;
   if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
   return (
