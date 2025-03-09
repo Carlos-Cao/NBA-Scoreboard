@@ -18,3 +18,17 @@ export interface NBAPlayer {
     college: string;
     country: string;
 }
+
+export interface Game {
+  id: number;
+  date: string;
+  status: string;
+  home_team: {
+    full_name: string;
+  };
+  visitor_team: {
+    full_name: string;
+  };
+  home_team_score: number;
+  visitor_team_score: number;
+}
